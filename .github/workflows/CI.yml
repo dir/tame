@@ -50,12 +50,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
-        if: ${{ !matrix.settings.docker }}
         with:
           version: latest
       - name: Setup node
         uses: actions/setup-node@v4
-        if: ${{ !matrix.settings.docker }}
         with:
           node-version: 20
           cache: pnpm
@@ -88,6 +86,7 @@ jobs:
         run: pnpm config set supportedArchitectures.cpu "ia32"
         shell: bash
       - name: Install dependencies
+        if: ${{ !matrix.settings.docker }}
         run: pnpm install
       - name: Setup node x86
         uses: actions/setup-node@v4
@@ -104,8 +103,6 @@ jobs:
           options: "--user 0:0 -v ${{ github.workspace }}/.cargo-cache/git/db:/usr/local/cargo/git/db -v ${{ github.workspace }}/.cargo/registry/cache:/usr/local/cargo/registry/cache -v ${{ github.workspace }}/.cargo/registry/index:/usr/local/cargo/registry/index -v ${{ github.workspace }}:/build -w /build"
           shell: bash
           run: |
-            npm install -g pnpm
-            pnpm install
             ${{ matrix.settings.build }}
       - name: Build
         run: ${{ matrix.settings.build }}
