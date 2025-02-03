@@ -49,6 +49,10 @@ jobs:
     runs-on: ${{ matrix.settings.host }}
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        if: ${{ !matrix.settings.docker }}
+        with:
+          version: latest
       - name: Setup node
         uses: actions/setup-node@v4
         if: ${{ !matrix.settings.docker }}
