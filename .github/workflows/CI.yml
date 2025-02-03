@@ -103,10 +103,11 @@ jobs:
           options: "--user 0:0 -v ${{ github.workspace }}/.cargo-cache/git/db:/usr/local/cargo/git/db -v ${{ github.workspace }}/.cargo/registry/cache:/usr/local/cargo/registry/cache -v ${{ github.workspace }}/.cargo/registry/index:/usr/local/cargo/registry/index -v ${{ github.workspace }}:/build -w /build"
           shell: bash
           run: |
-            npm install -g pnpm
+            set -e
             cd /build
             rm -rf node_modules
-            pnpm install
+            corepack enable
+            pnpm install --no-frozen-lockfile
             ${{ matrix.settings.build }}
       - name: Build
         run: ${{ matrix.settings.build }}
